@@ -12,6 +12,7 @@ import ReactPDF, {
 } from "@react-pdf/renderer";
 import ReactModal from "react-modal";
 import { degrees, PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import pdf from "./assets/formulaire.pdf";
 
 function Form({
     setData,
@@ -139,7 +140,6 @@ async function modifyPdf() {
     // Fetch an existing PDF document
     const url = "https://pdf-lib.js.org/assets/with_update_sections.pdf";
     const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
-    console.log(existingPdfBytes);
 
     // Load a PDFDocument from the existing PDF bytes
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -176,7 +176,6 @@ async function modifyPdf() {
 
 function App() {
     const [data, setData] = useState({});
-    modifyPdf();
     // JSON.stringify(data);
     return (
         <>
