@@ -19,6 +19,11 @@ label {
 input {
     margin-left: 1vw;
 }
+.input-hint {
+    color: gray;
+    font-size: medium;
+    font-weight: normal;
+}
 
 #reset-form-button {
     /* width: 10%; */

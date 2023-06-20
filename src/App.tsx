@@ -7,11 +7,18 @@ import ReactPDF, {
     Page,
     View,
     PDFDownloadLink,
+    usePDF,
+    pdf,
 } from "@react-pdf/renderer";
 import ReactModal from "react-modal";
+import { degrees, PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
-function Form({ setData }) {
-    const handleSubmit = (e) => {
+function Form({
+    setData,
+}: {
+    setData: React.Dispatch<React.SetStateAction<{}>>;
+}) {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const form = e.target;
@@ -20,11 +27,23 @@ function Form({ setData }) {
 
         setData(formJson);
     };
+    const handleEnter = (e) => {
+        if (e.key.toLowerCase() === "enter") {
+            const form = e.target.form;
+            const index = [...form].indexOf(e.target);
+            form.elements[index + 1].focus();
+            e.preventDefault();
+        }
+    };
     const [modalVisibility, setModalVisibility] = useState(false);
 
     return (
         <>
             <form onSubmit={handleSubmit} className="form-test">
+                <p className="input-hint">
+                    Conseil: appuyez sur Entrer pour passer à la prochaine
+                    question, appuyez sur Espace pour cocher la case
+                </p>
                 <button
                     id="reset-form-button"
                     onClick={() => setModalVisibility(true)}
@@ -52,20 +71,28 @@ function Form({ setData }) {
                     <input
                         type="text"
                         name="firstName"
-                        // defaultValue={"first name"}
+                        onKeyDown={handleEnter}
                     />
+                    <p className="input-hint">
+                        Un prenom ne contient en général pas de chiffre, ex:
+                        Jean
+                    </p>
                 </label>
                 <label>
                     Nom:
                     <input
                         type="text"
                         name="lastName"
-                        // defaultValue={"last name"}
+                        onKeyDown={handleEnter}
                     />
                 </label>
                 <label>
                     Fantaisie
-                    <input type="checkbox" name="fantaisie" />
+                    <input
+                        type="checkbox"
+                        name="fantaisie"
+                        onKeyDown={handleEnter}
+                    />
                 </label>
                 <button type="submit" className="form-button">
                     Générer le dossier
@@ -108,9 +135,48 @@ function DownloadPDFButton({ PDF }) {
     );
 }
 
+async function modifyPdf() {
+    // Fetch an existing PDF document
+    const url = "https://pdf-lib.js.org/assets/with_update_sections.pdf";
+    const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
+    console.log(existingPdfBytes);
+
+    // Load a PDFDocument from the existing PDF bytes
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+    // Embed the Helvetica font
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    // Get the first page of the document
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+
+    // Get the width and height of the first page
+    const { width, height } = firstPage.getSize();
+
+    // Draw a string of text diagonally across the first page
+    firstPage.drawText("This text was added with JavaScript!", {
+        x: 5,
+        y: height / 2 + 300,
+        size: 50,
+        font: helveticaFont,
+        color: rgb(0.95, 0.1, 0.1),
+        rotate: degrees(-45),
+    });
+
+    // Serialize the PDFDocument to bytes (a Uint8Array)
+    const pdfBytes = await pdfDoc.save();
+    var blob = new Blob([pdfBytes], { type: "application/pdf" });
+
+    var link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "myFileName.pdf";
+    link.click();
+}
+
 function App() {
     const [data, setData] = useState({});
-
+    modifyPdf();
     // JSON.stringify(data);
     return (
         <>
