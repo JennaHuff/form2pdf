@@ -27,7 +27,6 @@ function Form({
     };
 
     const handleSubmit = (e: any) => {
-        console.log(e.target);
         e.preventDefault();
         renderFormPdf(e.target); // event target || null
     };
@@ -35,17 +34,16 @@ function Form({
     const handleEnter = (e: any) => {
         const form = e.target.form;
         const index = [...form].indexOf(e.target);
-        if (e.key === "Enter" || e.key === "ArrowDown") {
+        if (e.key === "Enter" || e.key === "ArrowDown" || e.key === "Tab") {
             e.preventDefault();
             const form = e.target.form;
             const index = [...form].indexOf(e.target);
             form.elements[index + 1].focus();
-            renderFormPdf(form);
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
             form.elements[index - 1].focus();
-            renderFormPdf(form);
         }
+        renderFormPdf(form);
     };
 
     return (
@@ -64,11 +62,7 @@ function Form({
                 </button>
                 <label>
                     Prenom:
-                    <input
-                        type="text"
-                        name="firstName"
-                        onKeyDown={handleEnter}
-                    />
+                    <input type="text" name="firstName" onKeyUp={handleEnter} />
                     <p className="input-hint">
                         Un prenom ne contient en général pas de chiffre, ex:
                         Jean
@@ -76,18 +70,14 @@ function Form({
                 </label>
                 <label>
                     Nom:
-                    <input
-                        type="text"
-                        name="lastName"
-                        onKeyDown={handleEnter}
-                    />
+                    <input type="text" name="lastName" onKeyUp={handleEnter} />
                 </label>
                 <label>
                     Fantaisie
                     <input
                         type="checkbox"
                         name="fantaisie"
-                        onKeyDown={handleEnter}
+                        onClick={handleEnter}
                     />
                 </label>
                 <button type="submit" className="form-button">
@@ -138,6 +128,7 @@ function DownloadPdfButton({ pdf }: { pdf: ReactElement }) {
 function App() {
     const [data, setData] = useState<IFormAnswers>({});
     const resultPdf = <ResultingPDF formAnswers={data} />;
+
     return (
         <>
             {(window.onbeforeunload = () => confirm(""))}
