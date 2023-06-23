@@ -19,27 +19,32 @@ function Form({
 }: {
     setData: React.Dispatch<React.SetStateAction<{}>>;
 }) {
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const form = e.target;
+    const renderFormPdf = (form: HTMLFormElement | undefined) => {
         const formData = new FormData(form);
         const formJson = Object.fromEntries(formData.entries());
 
         setData(formJson);
     };
 
-    const handleEnter = (e) => {
+    const handleSubmit = (e: any) => {
+        console.log(e.target);
+        e.preventDefault();
+        renderFormPdf(e.target); // event target || null
+    };
+
+    const handleEnter = (e: any) => {
+        const form = e.target.form;
+        const index = [...form].indexOf(e.target);
         if (e.key === "Enter" || e.key === "ArrowDown") {
             e.preventDefault();
             const form = e.target.form;
             const index = [...form].indexOf(e.target);
             form.elements[index + 1].focus();
+            renderFormPdf(form);
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
-            const form = e.target.form;
-            const index = [...form].indexOf(e.target);
             form.elements[index - 1].focus();
+            renderFormPdf(form);
         }
     };
 
