@@ -1,24 +1,25 @@
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import "./App.css";
-import ReactPDF, {
+import {
     Text,
     Document,
     PDFViewer,
     Page,
     View,
     PDFDownloadLink,
-    usePDF,
-    pdf,
 } from "@react-pdf/renderer";
-import ReactModal from "react-modal";
-import { degrees, PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
+interface IFormAnswers {
+    firstName?: string;
+    lastName?: string;
+    fantaisie?: boolean;
+}
 function Form({
     setData,
 }: {
     setData: React.Dispatch<React.SetStateAction<{}>>;
 }) {
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         const form = e.target;
@@ -27,45 +28,35 @@ function Form({
 
         setData(formJson);
     };
+
     const handleEnter = (e) => {
-        if (e.key.toLowerCase() === "enter") {
+        if (e.key === "Enter" || e.key === "ArrowDown") {
+            e.preventDefault();
             const form = e.target.form;
             const index = [...form].indexOf(e.target);
             form.elements[index + 1].focus();
+        } else if (e.key === "ArrowUp") {
             e.preventDefault();
+            const form = e.target.form;
+            const index = [...form].indexOf(e.target);
+            form.elements[index - 1].focus();
         }
     };
-    const [modalVisibility, setModalVisibility] = useState(false);
 
     return (
         <>
             <form onSubmit={handleSubmit} className="form-test">
                 <p className="input-hint">
-                    Conseil: appuyez sur Entrer pour passer à la prochaine
-                    question, appuyez sur Espace pour cocher la case
+                    Conseil: appuyez sur Entrer pour passer à la question
+                    suivante, appuyez sur Espace pour cocher la case, utilisez
+                    les fleches haut et bas pour naviguer
                 </p>
                 <button
                     id="reset-form-button"
-                    onClick={() => setModalVisibility(true)}
+                    onClick={() => location.reload()}
                 >
                     Réinitialiser
                 </button>
-                <ReactModal isOpen={modalVisibility}>
-                    {/* https://reactcommunity.org/react-modal/styles/classes/ */}
-                    <h2 style={{ color: "red" }}>
-                        Attention, cette action supprimera toutes les données
-                        entrées
-                    </h2>
-                    <button
-                        type="reset"
-                        style={{ backgroundColor: "red", color: "white" }}
-                    >
-                        Réinitialiser
-                    </button>
-                    <button onClick={() => setModalVisibility(false)}>
-                        Annuler
-                    </button>
-                </ReactModal>
                 <label>
                     Prenom:
                     <input
@@ -102,7 +93,7 @@ function Form({
     );
 }
 
-function ResultingPDF({ formAnswers }) {
+function ResultingPDF({ formAnswers }: { formAnswers: IFormAnswers }) {
     return (
         <Document>
             <Page size="A4">
@@ -118,15 +109,19 @@ function ResultingPDF({ formAnswers }) {
     );
 }
 
-function DownloadPDFButton({ PDF }) {
+function DownloadPdfButton({ pdf }: { pdf: ReactElement }) {
     return (
         <PDFDownloadLink
-            document={PDF}
+            document={pdf}
             fileName="formulaire_declaration_manifestation_publique.pdf"
         >
-            {({ blob, url, loading, error }) =>
+            {({ loading, error }) =>
                 loading ? (
                     <button>Chargement...</button>
+                ) : error ? (
+                    <p>
+                        Une erreur est survenue, essayez de recharger la page!
+                    </p>
                 ) : (
                     <button className="form-button">Télécharger</button>
                 )
@@ -135,59 +130,17 @@ function DownloadPDFButton({ PDF }) {
     );
 }
 
-async function modifyPdf() {
-    // Fetch an existing PDF document
-    const url = "https://dossier-declaration-manif.vercel.app/formulaire.pdf";
-    const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
-
-    // Load a PDFDocument from the existing PDF bytes
-    const pdfDoc = await PDFDocument.load(existingPdfBytes, {
-        ignoreEncryption: true,
-    });
-
-    // Embed the Helvetica font
-    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-    // Get the first page of the document
-    const pages = pdfDoc.getPages();
-    const firstPage = pages[0];
-
-    // Get the width and height of the first page
-    const { width, height } = firstPage.getSize();
-
-    // Draw a string of text diagonally across the first page
-    firstPage.drawText("This text was added with JavaScript!", {
-        x: 5,
-        y: height / 2 + 300,
-        size: 50,
-        font: helveticaFont,
-        color: rgb(0.95, 0.1, 0.1),
-        rotate: degrees(-45),
-    });
-
-    // Serialize the PDFDocument to bytes (a Uint8Array)
-    const pdfBytes = await pdfDoc.save();
-    var blob = new Blob([pdfBytes], { type: "application/pdf" });
-
-    var link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = "myFileName.pdf";
-    link.click();
-}
-
 function App() {
-    const [data, setData] = useState({});
-    modifyPdf();
-    // JSON.stringify(data);
+    const [data, setData] = useState<IFormAnswers>({});
+    const resultPdf = <ResultingPDF formAnswers={data} />;
     return (
         <>
+            {(window.onbeforeunload = () => confirm(""))}
             <h1>Formulaire de déclaration de manifestation publique </h1>
             <Form setData={setData} />
-            <DownloadPDFButton PDF={<ResultingPDF formAnswers={data} />} />
-
-            <PDFViewer className="pdf-viewer">
-                <ResultingPDF formAnswers={data} />
-            </PDFViewer>
+            <DownloadPdfButton pdf={resultPdf} />
+            <p>Here's your data: {JSON.stringify(data)}</p>
+            <PDFViewer className="pdf-viewer">{resultPdf}</PDFViewer>
         </>
     );
 }
