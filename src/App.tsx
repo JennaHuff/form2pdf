@@ -1,68 +1,46 @@
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-import {
-    Text,
-    Document,
-    PDFViewer,
-    Page,
-    View,
-    PDFDownloadLink,
-} from "@react-pdf/renderer";
+import { Text, Document, PDFViewer, Page, View } from "@react-pdf/renderer";
+import Toolbar from "./Components/Form/Toolbar/Toolbar";
 
-interface IFormAnswers {
-    firstName?: string;
-    lastName?: string;
-    fantaisie?: boolean;
-}
 function Form({
+    data,
     setData,
 }: {
-    setData: React.Dispatch<React.SetStateAction<{}>>;
+    data: IFormAnswers;
+    setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
 }) {
-    const renderFormPdf = (form: HTMLFormElement | undefined) => {
-        const formData = new FormData(form);
-        const formJson = Object.fromEntries(formData.entries());
-
-        setData(formJson);
-    };
-
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        renderFormPdf(e.target); // event target || null
-    };
-
-    const handleEnter = (e: any) => {
+    const handleKeyUp = (e: any) => {
+        console.log(e);
         const form = e.target.form;
         const index = [...form].indexOf(e.target);
         if (e.key === "Enter" || e.key === "ArrowDown" || e.key === "Tab") {
             e.preventDefault();
-            const form = e.target.form;
-            const index = [...form].indexOf(e.target);
             form.elements[index + 1].focus();
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
             form.elements[index - 1].focus();
         }
-        renderFormPdf(form);
     };
-
     return (
         <>
-            <form onSubmit={handleSubmit} className="form-test">
+            <form onSubmit={(e) => e.preventDefault()} className="form-test">
                 <p className="input-hint">
                     Conseil: appuyez sur Entrer pour passer à la question
                     suivante, appuyez sur Espace pour cocher la case, utilisez
                     les fleches haut et bas pour naviguer
                 </p>
-                <button
-                    id="reset-form-button"
-                    onClick={() => location.reload()}
-                >
-                    Réinitialiser
-                </button>
                 <label>
                     Prenom:
-                    <input type="text" name="firstName" onKeyUp={handleEnter} />
+                    <input
+                        type="text"
+                        name="firstName"
+                        onKeyUp={handleKeyUp}
+                        value={data.firstName}
+                        onChange={(e) =>
+                            setData({ ...data, ["firstName"]: e.target.value })
+                        }
+                    />
                     <p className="input-hint">
                         Un prenom ne contient en général pas de chiffre, ex:
                         Jean
@@ -70,19 +48,24 @@ function Form({
                 </label>
                 <label>
                     Nom:
-                    <input type="text" name="lastName" onKeyUp={handleEnter} />
+                    <input
+                        type="text"
+                        name="lastName"
+                        onKeyUp={handleKeyUp}
+                        value={data.lastName}
+                        onChange={(e) =>
+                            setData({ ...data, ["lastName"]: e.target.value })
+                        }
+                    />
                 </label>
                 <label>
                     Fantaisie
                     <input
                         type="checkbox"
                         name="fantaisie"
-                        onClick={handleEnter}
+                        onFocus={handleKeyUp}
                     />
                 </label>
-                <button type="submit" className="form-button">
-                    Générer le dossier
-                </button>
             </form>
         </>
     );
@@ -104,37 +87,26 @@ function ResultingPDF({ formAnswers }: { formAnswers: IFormAnswers }) {
     );
 }
 
-function DownloadPdfButton({ pdf }: { pdf: ReactElement }) {
-    return (
-        <PDFDownloadLink
-            document={pdf}
-            fileName="formulaire_declaration_manifestation_publique.pdf"
-        >
-            {({ loading, error }) =>
-                loading ? (
-                    <button>Chargement...</button>
-                ) : error ? (
-                    <p>
-                        Une erreur est survenue, essayez de recharger la page!
-                    </p>
-                ) : (
-                    <button className="form-button">Télécharger</button>
-                )
-            }
-        </PDFDownloadLink>
-    );
-}
-
 function App() {
-    const [data, setData] = useState<IFormAnswers>({});
+    const defaultData: IFormAnswers = {
+        firstName: "",
+        lastName: "",
+        // fantaisie: "on",
+    };
+    const [data, setData] = useState(defaultData);
+
     const resultPdf = <ResultingPDF formAnswers={data} />;
 
     return (
         <>
             {(window.onbeforeunload = () => confirm(""))}
             <h1>Formulaire de déclaration de manifestation publique </h1>
-            <Form setData={setData} />
-            <DownloadPdfButton pdf={resultPdf} />
+            <Toolbar
+                defaultData={defaultData}
+                setData={setData}
+                pdf={resultPdf}
+            />
+            <Form data={data} setData={setData} />
             <p>Here's your data: {JSON.stringify(data)}</p>
             <PDFViewer className="pdf-viewer">{resultPdf}</PDFViewer>
         </>

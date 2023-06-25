@@ -25,18 +25,21 @@ input {
     font-weight: normal;
 }
 
-#reset-form-button {
-    /* width: 10%; */
-    width: fit-content;
-    background-color: red;
+.toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 2vw;
+}
+
+.toolbar > a > button,
+button {
     color: white;
-    align-self: flex-end;
+}
+.reset-form-button {
+    background-color: red;
 }
 .form-button {
-    width: 40%;
-    background-color: darkblue;
-    color: white;
-    align-self: center;
+    background-color: rgb(89, 89, 255);
 }
 
 .pdf-viewer {
