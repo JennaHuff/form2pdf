@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { Text, Document, PDFViewer, Page, View } from "@react-pdf/renderer";
 import Toolbar from "./Components/Form/Toolbar/Toolbar";
+import CopyToClipboard from "./Components/Form/CopyToClipboard";
 
 function Form({
     data,
@@ -63,7 +64,14 @@ function Form({
                     <input
                         type="checkbox"
                         name="fantaisie"
-                        onFocus={handleKeyUp}
+                        checked={data.fantaisie}
+                        onChange={(e) => {
+                            setData({
+                                ...data,
+                                ["fantaisie"]: e.target.checked,
+                            });
+                            console.log(e.target.checked);
+                        }}
                     />
                 </label>
             </form>
@@ -78,9 +86,7 @@ function ResultingPDF({ formAnswers }: { formAnswers: IFormAnswers }) {
                 <View>
                     <Text>Your first name: {formAnswers.firstName}</Text>
                     <Text>Your last name: {formAnswers.lastName}</Text>
-                    <Text>
-                        Fantaisie: {formAnswers.fantaisie ? "oui" : "non"}
-                    </Text>
+                    <Text>Fantaisie: {formAnswers.fantaisie!.toString()}</Text>
                 </View>
             </Page>
         </Document>
@@ -91,15 +97,15 @@ function App() {
     const defaultData: IFormAnswers = {
         firstName: "",
         lastName: "",
-        // fantaisie: "on",
+        fantaisie: false,
     };
     const [data, setData] = useState(defaultData);
 
     const resultPdf = <ResultingPDF formAnswers={data} />;
 
+    window.onbeforeunload = () => confirm("");
     return (
         <>
-            {(window.onbeforeunload = () => confirm(""))}
             <h1>Formulaire de déclaration de manifestation publique </h1>
             <Toolbar
                 defaultData={defaultData}
@@ -107,7 +113,7 @@ function App() {
                 pdf={resultPdf}
             />
             <Form data={data} setData={setData} />
-            <p>Here's your data: {JSON.stringify(data)}</p>
+            <CopyToClipboard data={data} />
             <PDFViewer className="pdf-viewer">{resultPdf}</PDFViewer>
         </>
     );

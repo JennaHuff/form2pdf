@@ -6,6 +6,7 @@ export default function ModifyPreviousAnswers({
     setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
 }) {
     const [modifyExisting, setModifyInputVisibility] = useState(false);
+    const [jsonError, setJsonError] = useState(null);
     return (
         <>
             <button
@@ -17,10 +18,22 @@ export default function ModifyPreviousAnswers({
             <input
                 type="text"
                 onChange={(e) => {
-                    setData(JSON.parse(e.target.value));
+                    try {
+                        setData(JSON.parse(e.target.value));
+                        setJsonError(null);
+                    } catch (error) {
+                        if (e.target.value === "") {
+                            setJsonError(null);
+                            console.log("vis");
+                        } else {
+                            console.log(error.message);
+                            setJsonError(error.message);
+                        }
+                    }
                 }}
                 style={{ display: modifyExisting === true ? "" : "none" }}
             />
+            {jsonError && <p>Les données sont incompatibles</p>}
         </>
     );
 }
