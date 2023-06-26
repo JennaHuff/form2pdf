@@ -1,16 +1,32 @@
 import { useState } from "react";
 import "./App.css";
-import { Text, Document, PDFViewer, Page, View } from "@react-pdf/renderer";
+import {
+    Text,
+    Document,
+    PDFViewer,
+    Page,
+    View,
+    Svg,
+    Path,
+} from "@react-pdf/renderer";
 import Toolbar from "./Components/Form/Toolbar/Toolbar";
 import CopyToClipboard from "./Components/Form/CopyToClipboard";
+import Compact from "@uiw/react-color-compact";
+import Header from "./Components/Header";
 
 function Form({
     data,
     setData,
+    colors,
 }: {
     data: IFormAnswers;
     setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
+    colors: any;
 }) {
+    // svgColor: string;
+    // setSvgColor: React.Dispatch<any>;
+    const { svgColor, setSvgColor, backgroundColor, setBackgroundColor } =
+        colors;
     const handleKeyUp = (e: any) => {
         console.log(e);
         const form = e.target.form;
@@ -23,14 +39,11 @@ function Form({
             form.elements[index - 1].focus();
         }
     };
+    const [compactVisibility, setCompactVisibility] = useState(true);
+    const [compact2Visibility, setCompact2Visibility] = useState(true);
     return (
         <>
             <form onSubmit={(e) => e.preventDefault()} className="form-test">
-                <p className="input-hint">
-                    Conseil: appuyez sur Entrer pour passer à la question
-                    suivante, appuyez sur Espace pour cocher la case, utilisez
-                    les fleches haut et bas pour naviguer
-                </p>
                 <label>
                     Prenom:
                     <input
@@ -60,7 +73,7 @@ function Form({
                     />
                 </label>
                 <label>
-                    Fantaisie
+                    Fantaisie:
                     <input
                         type="checkbox"
                         name="fantaisie"
@@ -70,7 +83,41 @@ function Form({
                                 ...data,
                                 ["fantaisie"]: e.target.checked,
                             });
-                            console.log(e.target.checked);
+                        }}
+                    />
+                </label>
+                <label className="color-picker">
+                    <button
+                        onClick={() =>
+                            setCompact2Visibility(!compact2Visibility)
+                        }
+                    >
+                        Pick SVG color
+                    </button>
+                    <Compact
+                        style={{
+                            display: compact2Visibility ? "none" : "block",
+                        }}
+                        color={svgColor}
+                        onChange={(color) => {
+                            setSvgColor(color.hex);
+                        }}
+                    />
+                </label>
+                <label className="color-picker">
+                    <button
+                        onClick={() => setCompactVisibility(!compactVisibility)}
+                    >
+                        Pick background color
+                    </button>
+
+                    <Compact
+                        style={{
+                            display: compactVisibility ? "none" : "block",
+                        }}
+                        color={backgroundColor}
+                        onChange={(color) => {
+                            setBackgroundColor(color.hex);
                         }}
                     />
                 </label>
@@ -79,13 +126,36 @@ function Form({
     );
 }
 
-function ResultingPDF({ formAnswers }: { formAnswers: IFormAnswers }) {
+function ResultingPDF({
+    formAnswers,
+    svgColor,
+    backgroundColor,
+}: {
+    formAnswers: IFormAnswers;
+    svgColor: string;
+    backgroundColor: string;
+}) {
+    console.log(svgColor);
     return (
         <Document>
-            <Page size="A4">
-                <View>
-                    <Text>Your first name: {formAnswers.firstName}</Text>
-                    <Text>Your last name: {formAnswers.lastName}</Text>
+            <Page
+                size="A4"
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    backgroundColor: backgroundColor,
+                }}
+            >
+                <Svg width="190" height="160">
+                    <Path
+                        d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+                        stroke={svgColor}
+                        strokeWidth={6}
+                    />
+                </Svg>
+                <View style={{ margin: "10vw", lineHeight: "2px" }}>
+                    <Text>First name: {formAnswers.firstName}</Text>
+                    <Text>Last name: {formAnswers.lastName}</Text>
                     <Text>Fantaisie: {formAnswers.fantaisie!.toString()}</Text>
                 </View>
             </Page>
@@ -101,18 +171,35 @@ function App() {
     };
     const [data, setData] = useState(defaultData);
 
-    const resultPdf = <ResultingPDF formAnswers={data} />;
+    const [svgColor, setSvgColor] = useState("#fff");
+    const [backgroundColor, setBackgroundColor] = useState("#fff");
+    const colors = {
+        svgColor,
+        setSvgColor,
+        backgroundColor,
+        setBackgroundColor,
+    };
+
+    const resultPdf = (
+        <ResultingPDF
+            formAnswers={data}
+            svgColor={svgColor}
+            backgroundColor={backgroundColor}
+        />
+    );
 
     window.onbeforeunload = () => confirm("");
     return (
         <>
-            <h1>Formulaire de déclaration de manifestation publique </h1>
-            <Toolbar
-                defaultData={defaultData}
-                setData={setData}
-                pdf={resultPdf}
-            />
-            <Form data={data} setData={setData} />
+            <Header />
+            <div className="grid-container">
+                <Toolbar
+                    defaultData={defaultData}
+                    setData={setData}
+                    pdf={resultPdf}
+                />
+                <Form data={data} setData={setData} colors={colors} />
+            </div>
             <CopyToClipboard data={data} />
             <PDFViewer className="pdf-viewer">{resultPdf}</PDFViewer>
         </>
