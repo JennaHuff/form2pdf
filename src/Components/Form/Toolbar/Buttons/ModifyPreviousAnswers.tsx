@@ -31,6 +31,7 @@ export default function ModifyPreviousAnswers({
                         }
                     }
                 }}
+                placeholder="JSON data"
                 style={{ display: modifyExisting === true ? "" : "none" }}
             />
             {jsonError && <p>Les données sont incompatibles</p>}
