@@ -13,6 +13,51 @@ import Toolbar from "./Components/Form/Toolbar/Toolbar";
 import CopyToClipboard from "./Components/Form/CopyToClipboard";
 import Compact from "@uiw/react-color-compact";
 import Header from "./Components/Header";
+import DefaultValues from "../constants.ts";
+
+function TextInput({
+    data,
+    setData,
+    handleKeyUp,
+    label,
+    name,
+    value,
+    hint,
+}: any) {
+    return (
+        <label>
+            {label}
+            <input
+                type="text"
+                name={name}
+                onKeyUp={handleKeyUp}
+                value={value}
+                onChange={(e) => setData({ ...data, [name]: e.target.value })}
+            />
+            <p className="input-hint">{hint}</p>
+        </label>
+    );
+}
+
+function ColorPicker({ color, setColor, label }) {
+    const [compactVisibility, setCompactVisibility] = useState(true);
+    return (
+        <label className="color-picker">
+            <button onClick={() => setCompactVisibility(!compactVisibility)}>
+                {label}
+            </button>
+            <Compact
+                style={{
+                    display: compactVisibility ? "none" : "block",
+                }}
+                color={color}
+                onChange={(color) => {
+                    setColor(color.hex);
+                }}
+            />
+        </label>
+    );
+}
 
 function Form({
     data,
@@ -23,10 +68,9 @@ function Form({
     setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
     colors: any;
 }) {
-    // svgColor: string;
-    // setSvgColor: React.Dispatch<any>;
     const { svgColor, setSvgColor, backgroundColor, setBackgroundColor } =
         colors;
+
     const handleKeyUp = (e: any) => {
         console.log(e);
         const form = e.target.form;
@@ -39,39 +83,28 @@ function Form({
             form.elements[index - 1].focus();
         }
     };
-    const [compactVisibility, setCompactVisibility] = useState(true);
-    const [compact2Visibility, setCompact2Visibility] = useState(true);
     return (
         <>
             <form onSubmit={(e) => e.preventDefault()} className="form-test">
-                <label>
-                    Prenom:
-                    <input
-                        type="text"
-                        name="firstName"
-                        onKeyUp={handleKeyUp}
-                        value={data.firstName}
-                        onChange={(e) =>
-                            setData({ ...data, ["firstName"]: e.target.value })
-                        }
-                    />
-                    <p className="input-hint">
-                        Un prenom ne contient en général pas de chiffre, ex:
-                        Jean
-                    </p>
-                </label>
-                <label>
-                    Nom:
-                    <input
-                        type="text"
-                        name="lastName"
-                        onKeyUp={handleKeyUp}
-                        value={data.lastName}
-                        onChange={(e) =>
-                            setData({ ...data, ["lastName"]: e.target.value })
-                        }
-                    />
-                </label>
+                <TextInput
+                    data={data}
+                    setData={setData}
+                    handleKeyUp={handleKeyUp}
+                    label={"Prenom:"}
+                    name={"firstName"}
+                    value={data.firstName}
+                    hint={
+                        "Un prenom ne contient en général pas de chiffre, ex: Jean"
+                    }
+                />
+                <TextInput
+                    data={data}
+                    setData={setData}
+                    handleKeyUp={handleKeyUp}
+                    label={"Nom:"}
+                    name={"lastName"}
+                    value={data.lastName}
+                />
                 <label>
                     Fantaisie:
                     <input
@@ -86,41 +119,19 @@ function Form({
                         }}
                     />
                 </label>
-                <label className="color-picker">
-                    <button
-                        onClick={() =>
-                            setCompact2Visibility(!compact2Visibility)
-                        }
-                    >
-                        Pick SVG color
-                    </button>
-                    <Compact
-                        style={{
-                            display: compact2Visibility ? "none" : "block",
-                        }}
+                <div className="colors-component">
+                    <label>Couleurs:</label>
+                    <ColorPicker
+                        label={"Svg"}
                         color={svgColor}
-                        onChange={(color) => {
-                            setSvgColor(color.hex);
-                        }}
+                        setColor={setSvgColor}
                     />
-                </label>
-                <label className="color-picker">
-                    <button
-                        onClick={() => setCompactVisibility(!compactVisibility)}
-                    >
-                        Pick background color
-                    </button>
-
-                    <Compact
-                        style={{
-                            display: compactVisibility ? "none" : "block",
-                        }}
+                    <ColorPicker
+                        label={"Fond"}
                         color={backgroundColor}
-                        onChange={(color) => {
-                            setBackgroundColor(color.hex);
-                        }}
+                        setColor={setBackgroundColor}
                     />
-                </label>
+                </div>
             </form>
         </>
     );
@@ -164,16 +175,12 @@ function ResultingPDF({
 }
 
 function App() {
-    const defaultData: IFormAnswers = {
-        firstName: "",
-        lastName: "",
-        fantaisie: false,
-    };
-    const [data, setData] = useState(defaultData);
-
-    const [svgColor, setSvgColor] = useState("#fff");
-    const [backgroundColor, setBackgroundColor] = useState("#fff");
-    const colors = {
+    const [data, setData] = useState(DefaultValues.DEFAULT_FORM_ANSWERS);
+    const [svgColor, setSvgColor] = useState(DefaultValues.DEFAULT_SVG_COLOR);
+    const [backgroundColor, setBackgroundColor] = useState(
+        DefaultValues.DEFAULT_BACKGROUND_COLOR
+    );
+    const colors: IColors = {
         svgColor,
         setSvgColor,
         backgroundColor,
@@ -188,16 +195,12 @@ function App() {
         />
     );
 
-    window.onbeforeunload = () => confirm("");
+    window.onbeforeunload = () => confirm(""); // confirmation alert before page refresh/closing
     return (
         <>
             <Header />
-            <div className="grid-container">
-                <Toolbar
-                    defaultData={defaultData}
-                    setData={setData}
-                    pdf={resultPdf}
-                />
+            <div className="toolbar-and-form-flex">
+                <Toolbar setData={setData} colors={colors} pdf={resultPdf} />
                 <Form data={data} setData={setData} colors={colors} />
             </div>
             <CopyToClipboard data={data} />
