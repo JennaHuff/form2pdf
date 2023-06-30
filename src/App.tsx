@@ -39,7 +39,15 @@ function TextInput({
     );
 }
 
-function ColorPicker({ color, setColor, label }) {
+function ColorPicker({
+    color,
+    setColor,
+    label,
+}: {
+    color: string;
+    setColor: React.Dispatch<React.SetStateAction<string>>;
+    label: string;
+}) {
     const [compactVisibility, setCompactVisibility] = useState(true);
     return (
         <label className="color-picker">
