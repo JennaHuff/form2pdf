@@ -21,7 +21,7 @@ export default function ModifyPreviousAnswers({
                     try {
                         setData(JSON.parse(e.target.value));
                         setJsonError(null);
-                    } catch (error) {
+                    } catch (error: any) {
                         if (e.target.value === "") {
                             setJsonError(null);
                             console.log("vis");
