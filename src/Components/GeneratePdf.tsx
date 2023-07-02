@@ -2,14 +2,12 @@ import { Text, Document, Page, View, Svg, Path } from "@react-pdf/renderer";
 
 export default function GeneratePdf({
     formAnswers,
-    svgColor,
-    backgroundColor,
-    fontColor,
+    colors,
+    font,
 }: {
     formAnswers: IFormAnswers;
-    svgColor: string;
-    backgroundColor: string;
-    fontColor: string;
+    colors: IColors;
+    font: string;
 }) {
     return (
         <Document>
@@ -18,13 +16,13 @@ export default function GeneratePdf({
                 style={{
                     display: "flex",
                     flexDirection: "row",
-                    backgroundColor: backgroundColor,
+                    backgroundColor: colors.backgroundColor,
                 }}
             >
                 <Svg width="190" height="160">
                     <Path
                         d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
-                        stroke={svgColor}
+                        stroke={colors.svgColor}
                         strokeWidth={6}
                     />
                 </Svg>
@@ -35,11 +33,19 @@ export default function GeneratePdf({
                     }}
                 >
                     {Object.keys(formAnswers).map((key) => (
-                        <Text style={{ color: fontColor }}>
+                        <Text
+                            style={{
+                                color: colors.fontColor,
+                                fontFamily: font,
+                            }}
+                        >
                             {key}:
-                            {typeof formAnswers[key] === "boolean"
-                                ? formAnswers[key].toString()
-                                : formAnswers[key]}
+                            {typeof formAnswers[key as keyof IFormAnswers] ===
+                            "boolean"
+                                ? formAnswers[
+                                      key as keyof IFormAnswers
+                                  ]!.toString() // 'checkboxTicked: "true"'
+                                : formAnswers[key as keyof IFormAnswers]}
                         </Text>
                     ))}
                 </View>

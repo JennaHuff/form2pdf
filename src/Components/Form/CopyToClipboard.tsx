@@ -4,6 +4,7 @@ export default function CopyToClipboard({ data }: { data: IFormAnswers }) {
             <p>
                 Here's your data: <i>(store it yourself)</i>
                 {JSON.stringify(data)}
+                <br />
             </p>
             <button
                 className="form-button"

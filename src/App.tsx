@@ -3,10 +3,11 @@ import "./App.css";
 import { PDFViewer } from "@react-pdf/renderer";
 import Toolbar from "./Components/Form/Toolbar/Toolbar";
 import CopyToClipboard from "./Components/Form/CopyToClipboard";
-import Compact from "@uiw/react-color-compact";
 import Header from "./Components/Header";
 import DefaultValues from "../constants.ts";
 import GeneratePdf from "./Components/GeneratePdf.tsx";
+import ColorPickers from "./Components/Form/ColorPickers.tsx";
+import { FontPicker } from "./Components/Form/FontPicker.tsx";
 
 function TextInput({
     data,
@@ -32,54 +33,14 @@ function TextInput({
     );
 }
 
-function ColorPicker({
-    color,
-    setColor,
-    label,
-}: {
-    color: string;
-    setColor: React.Dispatch<React.SetStateAction<string>>;
-    label: string;
-}) {
-    const [compactVisibility, setCompactVisibility] = useState(true);
-    return (
-        <label className="color-picker">
-            <button onClick={() => setCompactVisibility(!compactVisibility)}>
-                {label}
-            </button>
-            <Compact
-                style={{
-                    display: compactVisibility ? "none" : "block",
-                }}
-                color={color}
-                onChange={(color) => {
-                    setColor(color.hex);
-                }}
-            />
-        </label>
-    );
-}
-
 function Form({
     data,
     setData,
-    colors,
 }: {
     data: IFormAnswers;
     setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
-    colors: any;
 }) {
-    const {
-        svgColor,
-        setSvgColor,
-        backgroundColor,
-        setBackgroundColor,
-        fontColor,
-        setFontColor,
-    } = colors;
-
     const handleKeyUp = (e: any) => {
-        console.log(e);
         const form = e.target.form;
         const index = [...form].indexOf(e.target);
         if (e.key === "Enter" || e.key === "ArrowDown" || e.key === "Tab") {
@@ -126,24 +87,6 @@ function Form({
                         }}
                     />
                 </label>
-                <div className="colors-component">
-                    <label>Couleurs:</label>
-                    <ColorPicker
-                        label={"Svg"}
-                        color={svgColor}
-                        setColor={setSvgColor}
-                    />
-                    <ColorPicker
-                        label={"Fond"}
-                        color={backgroundColor}
-                        setColor={setBackgroundColor}
-                    />
-                    <ColorPicker
-                        label={"Police"}
-                        color={fontColor}
-                        setColor={setFontColor}
-                    />
-                </div>
             </form>
         </>
     );
@@ -167,22 +110,27 @@ function App() {
         setFontColor,
     };
 
+    const [font, setFont] = useState(DefaultValues.DEFAULT_FONT);
+
     const resultPdf = (
-        <GeneratePdf
-            formAnswers={data}
-            svgColor={svgColor}
-            backgroundColor={backgroundColor}
-            fontColor={fontColor}
-        />
+        <GeneratePdf formAnswers={data} colors={colors} font={font} />
     );
 
+    // window.location.hash = JSON.stringify(data);
+    // setData(JSON.parse(decodeURI(window.location.hash).replace("#", "")));
+    // window.location.hash = decodeURI(window.location.hash);
     window.onbeforeunload = () => confirm(""); // confirmation alert before page refresh/closing
     return (
         <>
+            <button
+            // onClick={() => console.log(decodeURI(window.location.hash))}
+            ></button>
             <Header />
             <div className="toolbar-and-form-flex">
                 <Toolbar setData={setData} colors={colors} pdf={resultPdf} />
-                <Form data={data} setData={setData} colors={colors} />
+                <Form data={data} setData={setData} />
+                <ColorPickers colors={colors} />
+                <FontPicker setFont={setFont} />
             </div>
             <CopyToClipboard data={data} />
             <PDFViewer className="pdf-viewer">{resultPdf}</PDFViewer>

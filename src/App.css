@@ -120,6 +120,14 @@
     }
 }
 
+.fonts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    & button {
+        width: fit-content;
+    }
+}
+
 .copy-to-clipboard {
     display: flex;
     background-color: #2f4f4f;
