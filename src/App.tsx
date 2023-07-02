@@ -1,19 +1,12 @@
 import { useState } from "react";
 import "./App.css";
-import {
-    Text,
-    Document,
-    PDFViewer,
-    Page,
-    View,
-    Svg,
-    Path,
-} from "@react-pdf/renderer";
+import { PDFViewer } from "@react-pdf/renderer";
 import Toolbar from "./Components/Form/Toolbar/Toolbar";
 import CopyToClipboard from "./Components/Form/CopyToClipboard";
 import Compact from "@uiw/react-color-compact";
 import Header from "./Components/Header";
 import DefaultValues from "../constants.ts";
+import GeneratePdf from "./Components/GeneratePdf.tsx";
 
 function TextInput({
     data,
@@ -76,8 +69,14 @@ function Form({
     setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
     colors: any;
 }) {
-    const { svgColor, setSvgColor, backgroundColor, setBackgroundColor } =
-        colors;
+    const {
+        svgColor,
+        setSvgColor,
+        backgroundColor,
+        setBackgroundColor,
+        fontColor,
+        setFontColor,
+    } = colors;
 
     const handleKeyUp = (e: any) => {
         console.log(e);
@@ -139,46 +138,14 @@ function Form({
                         color={backgroundColor}
                         setColor={setBackgroundColor}
                     />
+                    <ColorPicker
+                        label={"Police"}
+                        color={fontColor}
+                        setColor={setFontColor}
+                    />
                 </div>
             </form>
         </>
-    );
-}
-
-function ResultingPDF({
-    formAnswers,
-    svgColor,
-    backgroundColor,
-}: {
-    formAnswers: IFormAnswers;
-    svgColor: string;
-    backgroundColor: string;
-}) {
-    console.log(svgColor);
-    return (
-        <Document>
-            <Page
-                size="A4"
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    backgroundColor: backgroundColor,
-                }}
-            >
-                <Svg width="190" height="160">
-                    <Path
-                        d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
-                        stroke={svgColor}
-                        strokeWidth={6}
-                    />
-                </Svg>
-                <View style={{ margin: "10vw", lineHeight: "2px" }}>
-                    <Text>First name: {formAnswers.firstName}</Text>
-                    <Text>Last name: {formAnswers.lastName}</Text>
-                    <Text>Fantaisie: {formAnswers.fantaisie!.toString()}</Text>
-                </View>
-            </Page>
-        </Document>
     );
 }
 
@@ -188,18 +155,24 @@ function App() {
     const [backgroundColor, setBackgroundColor] = useState(
         DefaultValues.DEFAULT_BACKGROUND_COLOR
     );
+    const [fontColor, setFontColor] = useState(
+        DefaultValues.DEFAULT_FONT_COLOR
+    );
     const colors: IColors = {
         svgColor,
         setSvgColor,
         backgroundColor,
         setBackgroundColor,
+        fontColor,
+        setFontColor,
     };
 
     const resultPdf = (
-        <ResultingPDF
+        <GeneratePdf
             formAnswers={data}
             svgColor={svgColor}
             backgroundColor={backgroundColor}
+            fontColor={fontColor}
         />
     );
 

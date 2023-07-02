@@ -9,4 +9,6 @@ interface IColors {
     setSvgColor: React.Dispatch<React.SetStateAction<string>>;
     backgroundColor: string;
     setBackgroundColor: React.Dispatch<React.SetStateAction<string>>;
+    fontColor: string;
+    setFontColor: React.Dispatch<React.SetStateAction<string>>;
 }

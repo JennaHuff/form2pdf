@@ -9,7 +9,7 @@ export default function ResetFormButton({
     setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
     colors: IColors;
 }) {
-    const { setSvgColor, setBackgroundColor } = colors;
+    const { setSvgColor, setBackgroundColor, setFontColor } = colors;
     const [modalVisibility, setModalVisibility] = useState(false);
     ReactModal.setAppElement("#root");
     return (
@@ -28,8 +28,9 @@ export default function ResetFormButton({
                             setSvgColor(DefaultValues.DEFAULT_SVG_COLOR),
                             setBackgroundColor(
                                 DefaultValues.DEFAULT_BACKGROUND_COLOR
-                            );
-                        setModalVisibility(false);
+                            ),
+                            setFontColor(DefaultValues.DEFAULT_FONT_COLOR),
+                            setModalVisibility(false);
                     }}
                 >
                     Confirmer
