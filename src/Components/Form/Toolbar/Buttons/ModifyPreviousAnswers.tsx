@@ -13,7 +13,7 @@ export default function ModifyPreviousAnswers({
                 className={"form-button"}
                 onClick={() => setModifyInputVisibility(!modifyExisting)}
             >
-                Modifier un formulaire existant
+                Reprendre
             </button>
             <input
                 type="text"

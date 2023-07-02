@@ -9,20 +9,12 @@
     text-align: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 7vh;
-
-    /* * {
-        border: 2px solid red;
-    } */
 
     @media (max-width: 600px) {
         .toolbar {
             flex-direction: row;
-        }
-        .toolbar-and-form-flex {
-            flex-direction: column;
-            align-items: center;
-            gap: 3vh;
         }
         .copy-to-clipboard {
             flex-direction: column;
@@ -44,14 +36,8 @@
     }
 
     & {
-        margin: 0;
         padding: 3vh;
     }
-}
-
-.toolbar-and-form-flex {
-    display: flex;
-    justify-items: center;
 }
 
 .reset-form-button {
@@ -67,27 +53,20 @@
 }
 
 .toolbar {
-    /* border: 2px solid blue */
     display: flex;
-    flex-direction: column;
-    width: fit-content;
     gap: 2vw;
 }
 
-.form-test {
-    /* border: 2px solid green */
-    display: flex;
-    flex-direction: column;
-    gap: 7vh;
-    width: 100%;
-    align-content: left;
-
+.colors-component,
+.form {
     label {
         font-weight: bold;
         font-size: large;
     }
-    input,
-    button {
+}
+
+.form {
+    input {
         margin-left: 1vw;
         box-shadow: var(--default-box-shadow);
     }
@@ -113,19 +92,13 @@
 .colors-component {
     display: flex;
     flex-direction: row;
-    align-self: center;
     gap: 1vw;
-    > label {
-        align-self: center;
-    }
 }
 
 .fonts-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    & button {
-        width: fit-content;
-    }
+    justify-items: stretch;
 }
 
 .copy-to-clipboard {

@@ -6,7 +6,7 @@ const DefaultValues = {
     },
     DEFAULT_SVG_COLOR: "#68BC00",
     DEFAULT_BACKGROUND_COLOR: "#fff",
-    DEFAULT_FONT_COLOR: "#68BC00",
+    DEFAULT_FONT_COLOR: "#194D33",
 
     DEFAULT_SUPPORTED_FONTS: [
         "Courier",

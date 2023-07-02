@@ -53,7 +53,7 @@ function Form({
     };
     return (
         <>
-            <form onSubmit={(e) => e.preventDefault()} className="form-test">
+            <form onSubmit={(e) => e.preventDefault()} className="form">
                 <TextInput
                     data={data}
                     setData={setData}
@@ -122,16 +122,11 @@ function App() {
     window.onbeforeunload = () => confirm(""); // confirmation alert before page refresh/closing
     return (
         <>
-            <button
-            // onClick={() => console.log(decodeURI(window.location.hash))}
-            ></button>
             <Header />
-            <div className="toolbar-and-form-flex">
-                <Toolbar setData={setData} colors={colors} pdf={resultPdf} />
-                <Form data={data} setData={setData} />
-                <ColorPickers colors={colors} />
-                <FontPicker setFont={setFont} />
-            </div>
+            <Toolbar setData={setData} colors={colors} pdf={resultPdf} />
+            <Form data={data} setData={setData} />
+            <ColorPickers colors={colors} />
+            <FontPicker setFont={setFont} />
             <CopyToClipboard data={data} />
             <PDFViewer className="pdf-viewer">{resultPdf}</PDFViewer>
         </>

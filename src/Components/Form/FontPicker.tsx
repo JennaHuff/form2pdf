@@ -15,8 +15,24 @@ export function FontPicker({
             </button>
             {dropdownVisibility && (
                 <div className="fonts-grid">
-                    {DefaultValues.DEFAULT_SUPPORTED_FONTS.map((font) => (
-                        <button onClick={() => setFont(font)}>{font}</button>
+                    {DefaultValues.DEFAULT_SUPPORTED_FONTS.map((font, key) => (
+                        <button
+                            key={key}
+                            onClick={() => setFont(font)}
+                            style={{
+                                fontFamily: font.split("-")[0],
+                                fontWeight: font.includes("Bold")
+                                    ? "bold"
+                                    : "normal",
+                                fontStyle:
+                                    font.includes("Oblique") ||
+                                    font.includes("Italic")
+                                        ? "italic"
+                                        : "normal",
+                            }}
+                        >
+                            {font}
+                        </button>
                     ))}
                 </div>
             )}

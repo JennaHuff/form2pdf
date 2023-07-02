@@ -32,20 +32,22 @@ export default function GeneratePdf({
                         lineHeight: "2px",
                     }}
                 >
-                    {Object.keys(formAnswers).map((key) => (
+                    {Object.keys(formAnswers).map((objectKey, key) => (
                         <Text
+                            key={key}
                             style={{
                                 color: colors.fontColor,
                                 fontFamily: font,
                             }}
                         >
-                            {key}:
-                            {typeof formAnswers[key as keyof IFormAnswers] ===
-                            "boolean"
+                            {objectKey}:
+                            {typeof formAnswers[
+                                objectKey as keyof IFormAnswers
+                            ] === "boolean"
                                 ? formAnswers[
-                                      key as keyof IFormAnswers
+                                      objectKey as keyof IFormAnswers
                                   ]!.toString() // 'checkboxTicked: "true"'
-                                : formAnswers[key as keyof IFormAnswers]}
+                                : formAnswers[objectKey as keyof IFormAnswers]}
                         </Text>
                     ))}
                 </View>
