@@ -1,21 +1,18 @@
 import DownloadPdfButton from "./Buttons/DownloadPdf";
-import ModifyPreviousAnswers from "./Buttons/ModifyPreviousAnswers";
 import ResetFormButton from "./Buttons/ResetForm";
 
 export default function Toolbar({
-    setData,
+    setDefault,
     pdf,
-    colors,
 }: {
-    setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
+    setDefault: Function;
     pdf: any;
-    colors: IColors;
 }) {
     return (
         <div className="toolbar">
             <DownloadPdfButton pdf={pdf} />
-            <ModifyPreviousAnswers setData={setData} />
-            <ResetFormButton setData={setData} colors={colors} />
+            {/* <ModifyPreviousAnswers data={data} setData={setData} /> */}
+            <ResetFormButton setDefault={setDefault} />
         </div>
     );
 }

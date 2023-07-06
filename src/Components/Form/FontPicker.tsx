@@ -1,5 +1,5 @@
 import { useState } from "react";
-import DefaultValues from "../../../constants.ts";
+import { DEFAULT_SUPPORTED_FONTS } from "../../../constants";
 
 export function FontPicker({
     setFont,
@@ -15,7 +15,7 @@ export function FontPicker({
             </button>
             {dropdownVisibility && (
                 <div className="fonts-grid">
-                    {DefaultValues.DEFAULT_SUPPORTED_FONTS.map((font, key) => (
+                    {DEFAULT_SUPPORTED_FONTS.map((font, key) => (
                         <button
                             key={key}
                             onClick={() => setFont(font)}

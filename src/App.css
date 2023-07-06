@@ -118,6 +118,21 @@
         color: black;
         box-shadow: 5px 5px 0px 0px rgba(204, 251, 249, 0.5);
     }
+    & i {
+        font-weight: lighter;
+    }
+}
+
+.reset-modal {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    right: 40px;
+    bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: x-large;
 }
 
 .pdf-viewer {

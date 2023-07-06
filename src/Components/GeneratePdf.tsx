@@ -1,14 +1,9 @@
 import { Text, Document, Page, View, Svg, Path } from "@react-pdf/renderer";
 
-export default function GeneratePdf({
-    formAnswers,
-    colors,
-    font,
-}: {
-    formAnswers: IFormAnswers;
-    colors: IColors;
-    font: string;
-}) {
+export default function GeneratePdf({ data }: { data: IData }) {
+    const { formAnswers, colors, font } = data;
+    const { svgColor, backgroundColor, fontColor } = colors;
+
     return (
         <Document>
             <Page
@@ -16,13 +11,13 @@ export default function GeneratePdf({
                 style={{
                     display: "flex",
                     flexDirection: "row",
-                    backgroundColor: colors.backgroundColor,
+                    backgroundColor: backgroundColor,
                 }}
             >
                 <Svg width="190" height="160">
                     <Path
                         d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
-                        stroke={colors.svgColor}
+                        stroke={svgColor}
                         strokeWidth={6}
                     />
                 </Svg>
@@ -36,18 +31,20 @@ export default function GeneratePdf({
                         <Text
                             key={key}
                             style={{
-                                color: colors.fontColor,
+                                color: fontColor,
                                 fontFamily: font,
                             }}
                         >
-                            {objectKey}:
+                            {objectKey + ": "}
                             {typeof formAnswers[
-                                objectKey as keyof IFormAnswers
+                                objectKey as keyof typeof formAnswers
                             ] === "boolean"
                                 ? formAnswers[
-                                      objectKey as keyof IFormAnswers
+                                      objectKey as keyof typeof formAnswers
                                   ]!.toString() // 'checkboxTicked: "true"'
-                                : formAnswers[objectKey as keyof IFormAnswers]}
+                                : formAnswers[
+                                      objectKey as keyof typeof formAnswers
+                                  ]}
                         </Text>
                     ))}
                 </View>

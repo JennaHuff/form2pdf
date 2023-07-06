@@ -1,39 +1,43 @@
 import { useState } from "react";
 
 export default function ModifyPreviousAnswers({
+    data,
     setData,
 }: {
-    setData: React.Dispatch<React.SetStateAction<IFormAnswers>>;
+    data: IData;
+    setData: any;
 }) {
-    const [modifyExisting, setModifyInputVisibility] = useState(false);
+    const [showInput, setShowInput] = useState(false);
     const [jsonError, setJsonError] = useState(null);
     return (
         <>
             <button
                 className={"form-button"}
-                onClick={() => setModifyInputVisibility(!modifyExisting)}
+                onClick={() => setShowInput(!showInput)}
             >
                 Reprendre
             </button>
-            <input
-                type="text"
-                onChange={(e) => {
-                    try {
-                        setData(JSON.parse(e.target.value));
-                        setJsonError(null);
-                    } catch (error: any) {
-                        if (e.target.value === "") {
+
+            {showInput ? (
+                <input
+                    type="text"
+                    value={JSON.stringify(data)}
+                    onChange={(e) => {
+                        try {
+                            setData(e.target.value);
                             setJsonError(null);
-                            console.log("vis");
-                        } else {
-                            console.log(error.message);
-                            setJsonError(error.message);
+                        } catch (error: any) {
+                            if (e.target.value === "") {
+                                setJsonError(null);
+                            } else {
+                                setJsonError(error.message);
+                            }
                         }
-                    }
-                }}
-                placeholder="JSON data"
-                style={{ display: modifyExisting === true ? "" : "none" }}
-            />
+                    }}
+                    placeholder="JSON data"
+                />
+            ) : null}
+
             {jsonError && <p>Les données sont incompatibles</p>}
         </>
     );

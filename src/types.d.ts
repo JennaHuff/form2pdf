@@ -4,11 +4,17 @@ interface IFormAnswers {
     fantaisie?: boolean;
 }
 
+interface IData {
+    formAnswers: IFormAnswers;
+    colors: IColors;
+    font: string;
+}
+
 interface IColors {
     svgColor: string;
-    setSvgColor: React.Dispatch<React.SetStateAction<string>>;
+    setSvgColor: React.Dispatch<>;
     backgroundColor: string;
-    setBackgroundColor: React.Dispatch<React.SetStateAction<string>>;
+    setBackgroundColor: React.Dispatch<>;
     fontColor: string;
-    setFontColor: React.Dispatch<React.SetStateAction<string>>;
+    setFontColor: React.Dispatch<>;
 }

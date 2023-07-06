@@ -30,23 +30,32 @@ function ColorPicker({
 }
 
 export default function ColorPickers({ colors }: { colors: IColors }) {
+    const {
+        svgColor,
+        setSvgColor,
+        backgroundColor,
+        setBackgroundColor,
+        fontColor,
+        setFontColor,
+    } = colors;
+
     return (
         <div className="colors-component">
             <label>Couleurs:</label>
             <ColorPicker
                 label={"Svg"}
-                color={colors.svgColor}
-                setColor={colors.setSvgColor}
+                color={svgColor}
+                setColor={setSvgColor}
             />
             <ColorPicker
                 label={"Fond"}
-                color={colors.backgroundColor}
-                setColor={colors.setBackgroundColor}
+                color={backgroundColor}
+                setColor={setBackgroundColor}
             />
             <ColorPicker
                 label={"Police"}
-                color={colors.fontColor}
-                setColor={colors.setFontColor}
+                color={fontColor}
+                setColor={setFontColor}
             />
         </div>
     );
