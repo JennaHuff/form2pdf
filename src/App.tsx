@@ -6,7 +6,6 @@ import {
     DEFAULT_FORM_ANSWERS,
     DEFAULT_SVG_COLOR,
 } from "../constants.ts";
-import { useEffect, useState } from "react";
 import "./App.css";
 import { PDFViewer } from "@react-pdf/renderer";
 import Toolbar from "./Components/Form/Toolbar/Toolbar";
