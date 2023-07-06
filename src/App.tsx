@@ -77,7 +77,7 @@ function Form({
 }
 
 function App() {
-    const stringUrlObj = decodeURI(location.href).split("/")[3]; // get url, last part (data obj)
+    const stringUrlObj = decodeURI(location.href).split("?")[1]; // get url, last part (data obj)
     let parsedUrlObj = null;
     try {
         parsedUrlObj = JSON.parse(stringUrlObj);
@@ -121,7 +121,7 @@ function App() {
 
     const resultPdf = <GeneratePdf data={data} />;
 
-    history.pushState(null, "", JSON.stringify(data)); // append data obj to url
+    history.pushState(null, "", `?${JSON.stringify(data)}`); // append data obj to url
 
     window.onbeforeunload = () => confirm(""); // confirmation alert before page refresh/closing
     return (
