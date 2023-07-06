@@ -13,6 +13,7 @@ import CopyToClipboard from "./Components/Form/CopyToClipboard";
 import GeneratePdf from "./Components/GeneratePdf.tsx";
 import ColorPickers from "./Components/Form/ColorPickers.tsx";
 import { FontPicker } from "./Components/Form/FontPicker.tsx";
+import { useState } from "react";
 
 function TextInput({ data, setData, label, name, value, hint }: any) {
     return (
