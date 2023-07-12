@@ -9,7 +9,6 @@ import {
 import "./App.css";
 import { PDFViewer } from "@react-pdf/renderer";
 import Toolbar from "./Components/Form/Toolbar/Toolbar";
-import CopyToClipboard from "./Components/Form/CopyToClipboard";
 import GeneratePdf from "./Components/GeneratePdf.tsx";
 import ColorPickers from "./Components/Form/ColorPickers.tsx";
 import { FontPicker } from "./Components/Form/FontPicker.tsx";

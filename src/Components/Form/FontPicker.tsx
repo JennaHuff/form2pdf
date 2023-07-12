@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { DEFAULT_SUPPORTED_FONTS } from "../../../constants";
 
 export function FontPicker({
@@ -8,13 +7,8 @@ export function FontPicker({
     font: string;
     setFont: React.Dispatch<React.SetStateAction<string>>;
 }) {
-    const [dropdownVisibility, setDropdownVisibility] =
-        useState<boolean>(false);
     return (
         <>
-            {/* <button onClick={() => setDropdownVisibility(!dropdownVisibility)}>
-                Polices
-            </button> */}
             <div className="font-component">
                 <label>Police: </label>
                 <u
@@ -46,7 +40,6 @@ export function FontPicker({
                                         : "normal",
                             }}
                         >
-                            {/* {font} */}
                             Aa
                         </button>
                     ))}
