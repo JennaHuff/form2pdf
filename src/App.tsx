@@ -56,6 +56,7 @@ function Form({
                     label={"Nom:"}
                     name={"lastName"}
                     value={formAnswers.lastName}
+                    hint={"exemple: Musk"}
                 />
                 <label>
                     Fantaisie:
@@ -126,12 +127,24 @@ function App() {
     window.onbeforeunload = () => confirm(""); // confirmation alert before page refresh/closing
     return (
         <>
-            <Header />
-            <Toolbar setDefault={setDefault} pdf={resultPdf} />
-            <Form formAnswers={formAnswers} setFormAnswers={setFormAnswers} />
-            <ColorPickers colors={colors} />
-            <FontPicker setFont={setFont} />
-            <CopyToClipboard data={data} />
+            <Header
+                children={
+                    <Toolbar
+                        data={data}
+                        setDefault={setDefault}
+                        pdf={resultPdf}
+                    />
+                }
+            />
+            <div className="main-card">
+                <Form
+                    formAnswers={formAnswers}
+                    setFormAnswers={setFormAnswers}
+                />
+                <ColorPickers colors={colors} />
+                <FontPicker font={font} setFont={setFont} />
+            </div>
+
             <PDFViewer className="pdf-viewer">{resultPdf}</PDFViewer>
         </>
     );

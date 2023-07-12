@@ -1,5 +1,4 @@
 import Compact from "@uiw/react-color-compact";
-import { useState } from "react";
 
 function ColorPicker({
     color,
@@ -10,16 +9,10 @@ function ColorPicker({
     setColor: React.Dispatch<React.SetStateAction<string>>;
     label: string;
 }) {
-    const [compactVisibility, setCompactVisibility] = useState(true);
     return (
         <label className="color-picker">
-            <button onClick={() => setCompactVisibility(!compactVisibility)}>
-                {label}
-            </button>
+            {label}
             <Compact
-                style={{
-                    display: compactVisibility ? "none" : "block",
-                }}
                 color={color}
                 onChange={(color) => {
                     setColor(color.hex);
@@ -41,9 +34,8 @@ export default function ColorPickers({ colors }: { colors: IColors }) {
 
     return (
         <div className="colors-component">
-            <label>Couleurs:</label>
             <ColorPicker
-                label={"Svg"}
+                label={"Image"}
                 color={svgColor}
                 setColor={setSvgColor}
             />
@@ -53,7 +45,7 @@ export default function ColorPickers({ colors }: { colors: IColors }) {
                 setColor={setBackgroundColor}
             />
             <ColorPicker
-                label={"Police"}
+                label={"Texte"}
                 color={fontColor}
                 setColor={setFontColor}
             />
