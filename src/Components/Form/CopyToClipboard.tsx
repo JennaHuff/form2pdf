@@ -4,7 +4,7 @@ export default function CopyToClipboard({ data }: any) {
             <p>
                 Copier ces reponses
                 <br />
-                <i>{location.href}</i>
+                <i>{encodeURI(location.href)}</i>
             </p>
             <button
                 className="form-button"

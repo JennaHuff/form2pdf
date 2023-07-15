@@ -1,11 +1,13 @@
 import { useState } from "react";
 import ReactModal from "react-modal";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 export default function ResetFormButton({
     setDefault,
 }: {
     setDefault: Function;
 }) {
+    const windowWidth = useWindowSize().width;
     const [modalVisibility, setModalVisibility] = useState(false);
     ReactModal.setAppElement("#root");
     return (
@@ -14,7 +16,11 @@ export default function ResetFormButton({
                 className="reset-form-button"
                 onClick={() => setModalVisibility(true)}
             >
-                Réinitialiser
+                {windowWidth > 800 ? (
+                    "Réinitialiser"
+                ) : (
+                    <span className="material-symbols-outlined">delete</span>
+                )}
             </button>
             <ReactModal isOpen={modalVisibility} className="reset-modal">
                 <p>Attention, cela supprimera toutes vos réponses</p>

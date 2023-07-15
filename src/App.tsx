@@ -13,68 +13,7 @@ import GeneratePdf from "./Components/GeneratePdf.tsx";
 import ColorPickers from "./Components/Form/ColorPickers.tsx";
 import { FontPicker } from "./Components/Form/FontPicker.tsx";
 import { useState } from "react";
-
-function TextInput({ data, setData, label, name, value, hint }: any) {
-    return (
-        <label>
-            {label}
-            <input
-                type="text"
-                name={name}
-                value={value}
-                onChange={(e) => setData({ ...data, [name]: e.target.value })}
-            />
-            <p className="input-hint">{hint}</p>
-        </label>
-    );
-}
-
-function Form({
-    formAnswers,
-    setFormAnswers,
-}: {
-    formAnswers: IFormAnswers;
-    setFormAnswers: React.Dispatch<React.SetStateAction<IFormAnswers>>;
-}) {
-    return (
-        <>
-            <form onSubmit={(e) => e.preventDefault()} className="form">
-                <TextInput
-                    data={formAnswers}
-                    setData={setFormAnswers}
-                    label={"Prenom:"}
-                    name={"firstName"}
-                    value={formAnswers.firstName}
-                    hint={
-                        "Un prenom ne contient en général pas de chiffre, ex: Jean"
-                    }
-                />
-                <TextInput
-                    data={formAnswers}
-                    setData={setFormAnswers}
-                    label={"Nom:"}
-                    name={"lastName"}
-                    value={formAnswers.lastName}
-                    hint={"exemple: Musk"}
-                />
-                <label>
-                    Fantaisie:
-                    <input
-                        type="checkbox"
-                        name="fantaisie"
-                        checked={formAnswers.fantaisie}
-                        onChange={(e) => {
-                            setFormAnswers({
-                                ...formAnswers,
-                                ["fantaisie"]: e.target.checked,
-                            });
-                        }}
-                    />
-                </label>
-            </form>
-        </>
-    );
-}
+import { Form } from "./Components/Form/Form.tsx";
 
 function App() {
     const stringUrlObj = decodeURI(location.href).split("?")[1]; // get url, last part (data obj)
@@ -121,9 +60,9 @@ function App() {
 
     const resultPdf = <GeneratePdf data={data} />;
 
-    history.pushState(null, "", `?${JSON.stringify(data)}`); // append data obj to url
-
+    // history.pushState(null, "", `?${JSON.stringify(data)}`); // append data obj to url
     window.onbeforeunload = () => confirm(""); // confirmation alert before page refresh/closing
+
     return (
         <>
             <Header
@@ -142,8 +81,8 @@ function App() {
                 />
                 <ColorPickers colors={colors} />
                 <FontPicker font={font} setFont={setFont} />
+                <Toolbar data={data} setDefault={setDefault} pdf={resultPdf} />
             </div>
-
             <PDFViewer className="pdf-viewer">{resultPdf}</PDFViewer>
         </>
     );

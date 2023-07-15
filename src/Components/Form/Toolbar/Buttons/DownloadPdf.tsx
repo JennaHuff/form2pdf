@@ -1,6 +1,8 @@
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 export default function DownloadPdfButton({ pdf }: any) {
+    const windowWidth = useWindowSize().width;
     return (
         <PDFDownloadLink
             document={pdf}
@@ -10,7 +12,15 @@ export default function DownloadPdfButton({ pdf }: any) {
                 error ? (
                     <p>Une erreur est survenue, essayez de recharger la page</p>
                 ) : (
-                    <button className="form-button">Télécharger</button>
+                    <button className="form-button">
+                        {windowWidth > 800 ? (
+                            "Télécharger"
+                        ) : (
+                            <span className="material-symbols-outlined">
+                                download
+                            </span>
+                        )}
+                    </button>
                 )
             }
         </PDFDownloadLink>

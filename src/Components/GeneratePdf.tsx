@@ -3,6 +3,7 @@ import { Text, Document, Page, View, Svg, Path } from "@react-pdf/renderer";
 export default function GeneratePdf({ data }: { data: IData }) {
     const { formAnswers, colors, font } = data;
     const { svgColor, backgroundColor, fontColor } = colors;
+    console.log(formAnswers);
 
     return (
         <Document>
