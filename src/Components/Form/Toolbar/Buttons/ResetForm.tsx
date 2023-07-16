@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ReactModal from "react-modal";
-import { useWindowSize } from "@uidotdev/usehooks";
+import { useWindowSize } from "usehooks-ts";
 
 export default function ResetFormButton({
     setDefault,

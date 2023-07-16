@@ -1,6 +1,6 @@
 export const DEFAULT_FORM_ANSWERS: IFormAnswers = {
-    "First name": "",
-    "Last name": "",
+    firstName: "",
+    lastName: "",
     fantaisie: false,
 };
 export const DEFAULT_SVG_COLOR = "#68BC00";

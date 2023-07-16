@@ -1,5 +1,5 @@
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { useWindowSize } from "@uidotdev/usehooks";
+import { useWindowSize } from "usehooks-ts";
 
 export default function DownloadPdfButton({ pdf }: any) {
     const windowWidth = useWindowSize().width;

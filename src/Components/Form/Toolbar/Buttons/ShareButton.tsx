@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CopyToClipboard from "../../CopyToClipboard";
-import { useWindowSize } from "@uidotdev/usehooks";
+import { useWindowSize } from "usehooks-ts";
 
 export function ShareButton({ data }: { data: IData }) {
     const windowWidth = useWindowSize().width;
